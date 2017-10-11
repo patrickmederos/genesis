@@ -1,0 +1,14 @@
+# SASS
+.sass-cache
+*.css.map
+
+# Logs
+logs
+*.log
+
+
+# Dependency directory
+# Commenting this out is preferred by some poeple, see
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+bower_components
