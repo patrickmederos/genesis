@@ -1,0 +1,51 @@
+/* ==========================================================================
+ 0. Core - CSS Variables, Mixins, and Utilities
+ ========================================================================== */
+
+$color_slate: #5A5866;
+$color_warm_slate: #595050;
+$color_hearth: #FF9456; 
+
+$primary_font_color: #49484D;
+$primary_font_stack: "museo-sans-rounded", "Helvetica Neue", "helvetica", sans-serif;
+
+$material-curve: cubic-bezier(.62,.28,.23,.99);
+
+// For displaying retina assets
+// Pulled from @Stammy: http://paulstamatiou.com/responsive-retina-blog-development-part-2
+@mixin retina {
+  @media only screen and (-webkit-min-device-pixel-ratio: 1.3),
+  only screen and (-o-min-device-pixel-ratio: 13/10),
+  only screen and (min-resolution: 120dpi) {
+    @content;
+  }
+}
+
+@mixin font-smoothing(){
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+@mixin transition($type: all, $duration: .32s, $function: $material-curve){
+  transition: $type $duration $function;
+}
+
+// For tabelts and mid-sized mobile devices. Typically 54em.
+@mixin mq-tablet {
+  @media (max-width: 54em) {
+    @content;
+  }
+}
+
+// For smartphones and personal (small) mobile devices. Typically 30em.
+@mixin mq-personal {
+  @media  (max-width: 30em) {
+    @content;
+  }
+}
+
+@import "normalize";
+@import "main";
+
+
+
