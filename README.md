@@ -1,2 +1,2 @@
 # genesis
-getting my personal site going 
+getting my personal site going... 
