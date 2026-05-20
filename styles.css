@@ -167,6 +167,15 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 .foot-links a:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); }
 .foot-meta { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
 
+/* ---------- Recognition / quotes ---------- */
+.quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; text-align: left; }
+@media (max-width: 720px) { .quotes { grid-template-columns: 1fr; } }
+.quote-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem 1.6rem; display: flex; flex-direction: column; }
+.quote-card .tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-deep); }
+.quote-card blockquote { font-size: 0.98rem; line-height: 1.62; color: var(--ink-soft); margin: 0.7rem 0 1rem; }
+.quote-card cite { font-style: normal; font-size: 0.82rem; color: var(--muted); font-weight: 600; margin-top: auto; }
+.recognition-note { text-align: center; color: var(--muted); font-size: 0.9rem; margin-top: 1.5rem; }
+
 /* ---------- Reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in { opacity: 1; transform: none; }
