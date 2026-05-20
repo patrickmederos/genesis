@@ -753,3 +753,69 @@ section {
   background-color: #3b5998; }
 
 /*# sourceMappingURL=styles.css.map */
+
+/* === 2026 refresh: cyberpunk profile theme === */
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at 20% 10%, #221244 0, #0c0f24 42%, #060712 100%);
+  color: #d9e8ff;
+  min-height: 100vh;
+}
+
+.neon-grid {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(110, 255, 247, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 255, 247, 0.09) 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.wrap { max-width: 980px; }
+.content { padding: 7rem 0 4rem; position: relative; z-index: 1; }
+section {
+  border: 1px solid rgba(98, 255, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(11, 17, 39, 0.74);
+  box-shadow: 0 0 40px rgba(99, 255, 237, 0.12);
+  padding: 2rem;
+}
+
+.avatar-glow {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid #6df8ff;
+  box-shadow: 0 0 20px #6df8ff, inset 0 0 30px rgba(226, 69, 255, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow, .lead, .highlights li, .section-card p { color: #c3ccff; }
+.eyebrow { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; }
+.intro h1, h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #86f8ff;
+  text-shadow: 0 0 10px rgba(134, 248, 255, 0.5);
+  margin-top: 0;
+}
+.lead { font-size: 1.2rem; max-width: 760px; }
+.highlights { padding-left: 1.1rem; }
+.highlights li { margin-bottom: 0.65rem; }
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background: #0b1230;
+  border-top: 1px solid rgba(109, 248, 255, 0.45);
+  padding: 2rem 1rem;
+}
+.footer-social .button {
+  width: auto;
+  min-width: 150px;
+  border: 1px solid #82f6ff;
+  color: #82f6ff;
+  border-radius: 999px;
+  background: transparent;
+}
+.footer-social .button:hover { background: rgba(130, 246, 255, 0.12); }
