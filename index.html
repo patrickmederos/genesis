@@ -5,7 +5,8 @@
   <title>Patrick Mederos — Service Operations &amp; Customer Experience</title>
   <meta name="description" content="Patrick Mederos — service operations and customer experience leader. The first person at Tesla to lead operations for the Robotaxi fleet.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#FFFFFF">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14161B" media="(prefers-color-scheme: dark)">
 
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Patrick Mederos — Service Operations &amp; Customer Experience">
@@ -338,6 +339,10 @@
           <span>© <span id="year"></span> Patrick Mederos</span>
           <span>San Jose, California</span>
         </div>
+        <div class="easter-egg" aria-hidden="true" title="just hangin'">
+          <span class="sprite sprite-nessie" id="sprite-nessie"></span>
+          <span class="sprite sprite-squirtle" id="sprite-squirtle"></span>
+        </div>
       </div>
     </div>
   </footer>
@@ -363,6 +368,67 @@
   } else {
     els.forEach(function (el) { el.classList.add('in'); });
   }
+
+  // Easter egg: pixel buddies — Nessie (Apex) × Squirtle
+  (function () {
+    function spriteSVG(grid, pal, px) {
+      var h = grid.length, w = 0, x, y, f, rects = '';
+      for (y = 0; y < h; y++) { if (grid[y].length > w) w = grid[y].length; }
+      for (y = 0; y < h; y++) {
+        for (x = 0; x < grid[y].length; x++) {
+          f = pal[grid[y][x]];
+          if (f) rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + f + '"/>';
+        }
+      }
+      return '<svg width="' + (w * px) + '" height="' + (h * px) + '" viewBox="0 0 ' + w + ' ' + h +
+             '" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">' + rects + '</svg>';
+    }
+
+    var squirtlePal = { O:'#173a52', b:'#83c9ec', w:'#ffffff', k:'#16242e', S:'#9a5a1c', c:'#f6dca8', p:'#f29bb0' };
+    var squirtle = [
+      ".....OOOOOO.....",
+      "...OObbbbbbOO...",
+      "..ObbbbbbbbbbO..",
+      ".ObbbbbbbbbbbbO.",
+      ".ObwwbbbbbbwwbO.",
+      ".ObwkbbbbbbkwbO.",
+      ".ObbbbbbbbbbbbO.",
+      ".ObbppbbbbppbbO.",
+      "..ObbbbbbbbbbO..",
+      "...OSSSSSSSSO...",
+      "..OSccccccccSO..",
+      ".bOSccccccccSOb.",
+      "..OSccccccccSO..",
+      "...OSSSSSSSSO...",
+      "...Obb....bbO...",
+      "....OO....OO...."
+    ];
+
+    var nessiePal = { O:'#0e4d49', t:'#34c7be', e:'#a9efe7', k:'#16242e' };
+    var nessie = [
+      "......OOO.......",
+      ".....OtttO......",
+      ".....OtttO......",
+      ".....OktkO......",
+      ".....OtttO......",
+      "......OtO.......",
+      "......OtO.......",
+      "......OtO.......",
+      ".....OtttO......",
+      "...OOtttttOO....",
+      "..OttttttttO....",
+      ".OtteeeeeettO...",
+      ".OteeeeeeeetO...",
+      ".OtteeeeeettO...",
+      "..OttttttttO....",
+      "....OO..OO......"
+    ];
+
+    var n = document.getElementById('sprite-nessie');
+    var s = document.getElementById('sprite-squirtle');
+    if (n) n.innerHTML = spriteSVG(nessie, nessiePal, 4);
+    if (s) s.innerHTML = spriteSVG(squirtle, squirtlePal, 4);
+  })();
 </script>
 </body>
 </html>

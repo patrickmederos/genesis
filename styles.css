@@ -180,3 +180,41 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+/* ---------- Auto dark mode (follows system) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:      #14161B;
+    --surface:    #1C1F26;
+    --ink:        #F3F5F8;
+    --ink-soft:   #C6CAD2;
+    --muted:      #888E99;
+    --line:       #2A2E37;
+    --line-soft:  #23262E;
+    --accent:     #FF4B50;   /* brighter red for dark */
+    --accent-deep:#FF8E8A;   /* light red for text/links on dark */
+    --accent-tint:rgba(255,75,80,0.18);
+    --cta:        #5A78FF;
+    --cta-hover:  #7C93FF;
+  }
+  header { background: rgba(20,22,27,0.8); }
+  body::before { background: radial-gradient(80% 50% at 50% -10%, rgba(255,255,255,0.05), transparent 60%); }
+  .avatar { box-shadow: 0 0 0 5px var(--paper), 0 0 0 6px var(--line), 0 16px 40px rgba(0,0,0,0.5); }
+  .btn-primary:hover { box-shadow: 0 8px 24px rgba(90,120,255,0.35); }
+}
+
+/* ---------- Easter egg: Nessie × Squirtle ---------- */
+.easter-egg { display: flex; align-items: flex-end; justify-content: center; gap: 12px; margin-top: 2.6rem; min-height: 64px; }
+.sprite { display: inline-block; line-height: 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.18)); }
+.sprite svg { display: block; }
+.sprite-nessie { transform-origin: bottom center; animation: nessieBob 3.4s ease-in-out infinite; }
+.sprite-squirtle { transform-origin: bottom center; animation: squirtleBob 2.7s ease-in-out infinite; }
+@keyframes nessieBob {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-5px) rotate(1.5deg); }
+}
+@keyframes squirtleBob {
+  0%, 100% { transform: translateY(0) rotate(1.5deg); }
+  50%      { transform: translateY(-3px) rotate(-2deg); }
+}
+@media (prefers-reduced-motion: reduce) { .sprite-nessie, .sprite-squirtle { animation: none; } }
