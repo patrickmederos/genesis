@@ -94,17 +94,18 @@ img.avatar { display: block; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2.2rem; justify-content: center; }
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.92rem; padding: 0.75rem 1.5rem; border-radius: 999px; transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease; cursor: pointer; }
 .btn-primary { background: var(--cta); color: #fff; }
-.btn-primary:hover { background: var(--cta-hover); transform: translateY(-2px); }
+.btn-primary:hover { background: var(--cta-hover); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(52,87,220,0.28); }
 .btn-ghost { border: 1px solid var(--line); color: var(--ink); background: var(--surface); }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent-deep); transform: translateY(-2px); }
 
 /* ---------- Stats ---------- */
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 1rem; }
-.stat { background: var(--surface); padding: 1.6rem 1.4rem; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 1rem; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+.stat { background: var(--paper); padding: 2rem 1.6rem; position: relative; }
+.stat:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background: var(--line); }
 .stat .num { color: var(--ink); font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1; letter-spacing: -0.02em; font-weight: 700; }
 .stat .num span { color: var(--accent); }
 .stat .lbl { font-size: 0.82rem; color: var(--muted); margin-top: 0.55rem; line-height: 1.4; }
-@media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2)::after { display: none; } }
 
 /* ---------- Sections ---------- */
 section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
