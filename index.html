@@ -277,6 +277,12 @@
             <span class="chip">Reynolds &amp; Reynolds</span>
             <span class="chip">ADP</span>
             <span class="chip">Autobase</span>
+            <span class="chip">Adobe Premiere</span>
+            <span class="chip">FL Studio</span>
+            <span class="chip">PowerPoint</span>
+            <span class="chip">Excel</span>
+            <span class="chip">CRM Tools</span>
+            <span class="chip">AI</span>
           </div>
         </div>
         <div class="reveal">
@@ -355,6 +361,19 @@
   var header = document.getElementById('header');
   var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 8); };
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+
+  // chip ripple easter egg
+  document.querySelectorAll('.chip').forEach(function(chip) {
+    chip.addEventListener('click', function(e) {
+      var rect = chip.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var ripple = document.createElement('span');
+      ripple.className = 'chip-ripple';
+      ripple.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px;';
+      chip.appendChild(ripple);
+      ripple.addEventListener('animationend', function() { ripple.remove(); });
+    });
+  });
 
   // reveal on scroll
   var els = document.querySelectorAll('.reveal');

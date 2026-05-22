@@ -143,7 +143,9 @@ section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .two-col .section-head .eyebrow { justify-content: flex-start; }
 .subhead { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.55rem; }
-.chip { font-size: 0.86rem; font-weight: 500; color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); padding: 0.4rem 0.85rem; border-radius: 999px; }
+.chip { font-size: 0.86rem; font-weight: 500; color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); padding: 0.4rem 0.85rem; border-radius: 999px; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; }
+.chip-ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: chip-ripple .55s ease-out forwards; background: rgba(52,87,220,0.22); pointer-events: none; }
+@keyframes chip-ripple { to { transform: scale(4); opacity: 0; } }
 .lang { margin-bottom: 1.1rem; }
 .lang .name { font-weight: 600; color: var(--ink); }
 .lang .level { font-size: 0.84rem; color: var(--muted); }
