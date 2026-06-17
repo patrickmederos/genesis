@@ -169,7 +169,22 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 .foot-links a:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); }
 .foot-meta { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
 
+/* ---------- Progress bar ---------- */
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--cta)); z-index: 200; pointer-events: none; transition: width .08s linear; }
+
+/* ---------- Hero entrance ---------- */
+.hero-enter { animation: heroUp .72s cubic-bezier(0.22,1,0.36,1) both; }
+@keyframes heroUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
 /* ---------- Reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-enter { animation: none; }
+  #progress-bar { transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* keep counted numbers in ink colour; spans inside .num are accent by default */
+.stat .num .n { color: var(--ink); }

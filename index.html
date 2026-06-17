@@ -23,6 +23,7 @@
 </head>
 <body>
 <div class="wrap">
+  <div id="progress-bar"></div>
 
   <header id="header">
     <div class="container nav">
@@ -39,12 +40,12 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container narrow">
-      <img class="avatar" src="assets/img/patrick.jpg" alt="Patrick Mederos">
-      <p class="eyebrow">San Jose, California</p>
-      <h1>Patrick Mederos</h1>
-      <p class="role">Service Operations &amp; Customer Experience</p>
-      <p class="lead">Among the first on Tesla's <strong>Robotaxi</strong> team — and the first Operations Advisor in the program — helping define what great autonomous vehicle service looks like as the fleet expands nationwide.</p>
-      <div class="cta-row">
+      <img class="avatar hero-enter" style="animation-delay:.05s" src="assets/img/patrick.jpg" alt="Patrick Mederos">
+      <p class="eyebrow hero-enter" style="animation-delay:.2s">San Jose, California</p>
+      <h1 class="hero-enter" style="animation-delay:.35s">Patrick Mederos</h1>
+      <p class="role hero-enter" style="animation-delay:.5s">Service Operations &amp; Customer Experience</p>
+      <p class="lead hero-enter" style="animation-delay:.65s">Among the first on Tesla's <strong>Robotaxi</strong> team — and the first Operations Advisor in the program — helping define what great autonomous vehicle service looks like as the fleet expands nationwide.</p>
+      <div class="cta-row hero-enter" style="animation-delay:.8s">
         <a class="btn btn-primary" href="mailto:patrickvmederos@gmail.com">Get in touch</a>
         <a class="btn btn-ghost" href="https://www.linkedin.com/in/patrickmederos" target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
@@ -54,10 +55,10 @@
   <!-- STATS -->
   <div class="container narrow">
     <div class="stats reveal">
-      <div class="stat"><div class="num">6<span>+</span></div><div class="lbl">Years at Tesla</div></div>
-      <div class="stat"><div class="num">10<span>K+</span></div><div class="lbl">Customers helped throughout my career</div></div>
-      <div class="stat"><div class="num">Top <span>5%</span></div><div class="lbl">CSAT across Tesla's global service network</div></div>
-      <div class="stat"><div class="num">$5<span>M+</span></div><div class="lbl">In service sales as an advisor</div></div>
+      <div class="stat"><div class="num"><span class="n">6</span><span>+</span></div><div class="lbl">Years at Tesla</div></div>
+      <div class="stat"><div class="num"><span class="n">10</span><span>K+</span></div><div class="lbl">Customers helped throughout my career</div></div>
+      <div class="stat"><div class="num">Top <span><span class="n">5</span>%</span></div><div class="lbl">CSAT across Tesla's global service network</div></div>
+      <div class="stat"><div class="num">$<span class="n">5</span><span>M+</span></div><div class="lbl">In service sales as an advisor</div></div>
     </div>
   </div>
 
@@ -307,10 +308,44 @@
   // year
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // scroll progress bar
+  var bar = document.getElementById('progress-bar');
+  function updateBar() {
+    var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }
+  window.addEventListener('scroll', updateBar, { passive: true });
+
   // header hairline on scroll
   var header = document.getElementById('header');
   var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 8); };
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+
+  // stat counters
+  var statNums = document.querySelectorAll('.stat .n');
+  statNums.forEach(function(el) { el.dataset.target = parseInt(el.textContent, 10); if (!reduced) el.textContent = '0'; });
+  function runCounters() {
+    statNums.forEach(function(el) {
+      var target = parseInt(el.dataset.target, 10);
+      if (reduced) { el.textContent = target; return; }
+      var start = performance.now();
+      var dur = 1600;
+      (function step(now) {
+        var p = Math.min((now - start) / dur, 1);
+        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      })(start);
+    });
+  }
+  var statsEl = document.querySelector('.stats');
+  if ('IntersectionObserver' in window && statsEl) {
+    var cIO = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) { runCounters(); cIO.disconnect(); }
+    }, { threshold: 0.4 });
+    cIO.observe(statsEl);
+  } else { runCounters(); }
 
   // chip ripple easter egg
   document.querySelectorAll('.chip').forEach(function(chip) {
