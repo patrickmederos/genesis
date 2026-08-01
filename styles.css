@@ -129,8 +129,14 @@ header.scrolled { border-bottom-color: var(--line); }
 .stat:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 22%; height: 56%; width: 1px; background: var(--line); }
 .stat .num { font-family: var(--font-display); color: var(--ink); font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1; letter-spacing: -0.01em; font-weight: 600; }
 .stat .num span { color: var(--accent); }
-.stat .num .n { color: var(--ink); }
+.stat .num .n { color: var(--ink); display: inline-block; min-width: 1ch; }
 .stat .lbl { font-size: 0.82rem; color: var(--muted); margin-top: 0.55rem; line-height: 1.4; }
+
+/* slot machine: blur + jiggle while spinning, springy pop on landing */
+.stat.spinning .num .n { filter: blur(1.5px); animation: slotJiggle .14s linear infinite; }
+@keyframes slotJiggle { 0%,100% { transform: translateY(-7%); } 50% { transform: translateY(7%); } }
+.stat.landed .num { display: inline-block; animation: slotLand .45s cubic-bezier(0.22, 1.6, 0.36, 1); }
+@keyframes slotLand { 0% { transform: scale(1.22); } 100% { transform: scale(1); } }
 @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2)::after { display: none; } }
 
 /* ---------- Sections ---------- */
@@ -152,7 +158,8 @@ section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .company { margin-bottom: 3rem; }
 .company:last-child { margin-bottom: 0; }
 .company-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-bottom: 1.1rem; border-bottom: 1px solid var(--line); margin-bottom: 1.6rem; }
-.company-head .co { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); }
+.company-head .co { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 0.65rem; }
+.co-logo { width: 36px; height: 36px; flex: none; border-radius: 11px 11px 11px 4px; display: grid; place-items: center; font-size: 1.05rem; background: var(--accent-tint); border: 1px solid var(--line); }
 .company-head .meta { font-size: 0.85rem; color: var(--muted); white-space: nowrap; }
 
 .role-item { position: relative; padding-left: 1.5rem; margin-bottom: 1.7rem; }
@@ -175,6 +182,26 @@ section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .quote-card blockquote { font-size: 0.97rem; line-height: 1.62; color: var(--ink-soft); margin: 0.7rem 0 1rem; }
 .quote-card cite { font-style: normal; font-size: 0.82rem; color: var(--muted); font-weight: 600; margin-top: auto; }
 .recognition-note { text-align: center; color: var(--muted); font-size: 0.9rem; margin-top: 1.5rem; }
+
+/* ---------- Inspiration ---------- */
+.inspo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; text-align: left; }
+@media (max-width: 720px) { .inspo { grid-template-columns: 1fr; } }
+.inspo-card { background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: 1.5rem 1.6rem; display: flex; flex-direction: column; transition: transform .25s ease, box-shadow .25s ease; }
+.inspo-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(30,42,36,0.08); }
+.inspo-name { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+.inspo-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-deep); margin: 0.25rem 0 0.6rem; }
+.inspo-card p { font-size: 0.94rem; line-height: 1.62; color: var(--ink-soft); margin-bottom: 1rem; }
+.inspo-card a { font-size: 0.85rem; font-weight: 600; margin-top: auto; }
+
+/* ---------- Bookshelf ---------- */
+.books { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; text-align: center; }
+@media (max-width: 860px) { .books { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .books { grid-template-columns: repeat(2, 1fr); } }
+.book { display: flex; flex-direction: column; color: inherit; }
+.book img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 24px rgba(30,42,36,0.16); transition: transform .3s ease, box-shadow .3s ease; }
+.book:hover img { transform: translateY(-6px) rotate(-1.2deg); box-shadow: 0 18px 36px rgba(30,42,36,0.22); }
+.book-title { font-weight: 600; color: var(--ink); font-size: 0.85rem; line-height: 1.35; margin-top: 0.8rem; }
+.book-author { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
 
 /* ---------- Skills / Languages ---------- */
 .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; text-align: left; }
@@ -236,6 +263,8 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero-enter { animation: none; }
+  .stat.spinning .num .n, .stat.landed .num { animation: none; filter: none; }
+  .quote-card:hover, .inspo-card:hover, .book:hover img { transform: none; }
   #progress-bar { transition: none; }
   body::after { animation: none; }
   .sprite-nessie, .sprite-squirtle { animation: none; }
@@ -270,6 +299,10 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
   .stats { background: rgba(255,255,255,0.04); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
   .quote-card { background: rgba(255,255,255,0.04); }
   .quote-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+  .inspo-card { background: rgba(255,255,255,0.04); }
+  .inspo-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+  .book img { box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
+  .book:hover img { box-shadow: 0 18px 36px rgba(0,0,0,0.55); }
   .chip { background: rgba(255,255,255,0.05); }
   .foot-links a { background: rgba(255,255,255,0.05); }
   .foot-links a:hover { color: #10201A; }
