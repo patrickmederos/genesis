@@ -23,24 +23,45 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="fireflies" id="fireflies" aria-hidden="true"></div>
+
+<div class="vine" id="vine" aria-hidden="true">
+  <div class="vine-grow" id="vine-grow">
+    <svg class="vine-stem" viewBox="0 0 40 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20,0 C8,90 32,170 20,260 C8,350 32,430 20,520 C8,610 32,690 20,800"/>
+    </svg>
+  </div>
+  <span class="vine-leaf" style="--at:12%; --x:24px; --rot:30deg"></span>
+  <span class="vine-leaf" style="--at:26%; --x:11px; --rot:130deg"></span>
+  <span class="vine-leaf" style="--at:40%; --x:25px; --rot:20deg"></span>
+  <span class="vine-leaf" style="--at:54%; --x:10px; --rot:140deg"></span>
+  <span class="vine-leaf" style="--at:68%; --x:25px; --rot:35deg"></span>
+  <span class="vine-leaf" style="--at:82%; --x:11px; --rot:125deg"></span>
+  <span class="vine-bud" id="vine-bud"></span>
+</div>
+
 <div class="wrap">
-  <div id="progress-bar"></div>
 
   <header id="header">
     <div class="container nav">
       <div class="brand"><span class="dot">P</span> Patrick Mederos</div>
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#education">Education</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#education">Education</a>
+          <a href="#guestbook">Guestbook</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button class="dusk-toggle" id="dusk-toggle" type="button" aria-pressed="false" title="Turn on dusk" aria-label="Turn on dusk">🌙</button>
+      </div>
     </div>
   </header>
 
   <!-- HERO -->
   <section class="hero">
     <div class="container narrow">
+      <p class="greeting hero-enter" id="greeting" style="animation-delay:.02s"></p>
       <p class="eyebrow hero-enter" style="animation-delay:.05s">San Jose, California</p>
       <h1 class="hero-enter" style="animation-delay:.2s">Patrick Mederos</h1>
       <p class="role hero-enter" style="animation-delay:.35s">Service Operations &amp; Customer Experience</p>
@@ -391,17 +412,52 @@
           <div class="book-title">Dungeon Crawler Carl</div>
           <div class="book-author">Matt Dinniman</div>
         </a>
-        <a class="book" href="https://openlibrary.org/isbn/9780743269513" target="_blank" rel="noopener">
-          <img src="assets/img/books/7-habits.jpg" alt="The 7 Habits of Highly Effective People by Stephen R. Covey" loading="lazy">
-          <div class="book-title">The 7 Habits of Highly Effective People</div>
-          <div class="book-author">Stephen R. Covey</div>
+        <a class="book" href="https://openlibrary.org/isbn/9780062315007" target="_blank" rel="noopener">
+          <img src="assets/img/books/alchemist.jpg" alt="The Alchemist by Paulo Coelho" loading="lazy">
+          <div class="book-title">The Alchemist</div>
+          <div class="book-author">Paulo Coelho</div>
         </a>
-        <a class="book" href="https://openlibrary.org/isbn/9780671027032" target="_blank" rel="noopener">
-          <img src="assets/img/books/win-friends.jpg" alt="How to Win Friends and Influence People by Dale Carnegie" loading="lazy">
-          <div class="book-title">How to Win Friends and Influence People</div>
-          <div class="book-author">Dale Carnegie</div>
+        <a class="book" href="https://openlibrary.org/isbn/9781878424310" target="_blank" rel="noopener">
+          <img src="assets/img/books/four-agreements.jpg" alt="The Four Agreements by Don Miguel Ruiz" loading="lazy">
+          <div class="book-title">The Four Agreements</div>
+          <div class="book-author">Don Miguel Ruiz</div>
         </a>
       </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C200,38 400,2 600,20 C800,38 1000,2 1200,20" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+
+  <!-- GUESTBOOK -->
+  <section class="block" id="guestbook">
+    <div class="container narrow">
+      <div class="section-head reveal">
+        <span class="eyebrow">Guestbook</span>
+        <h2>Leave a mark.</h2>
+        <p class="guestbook-intro">Passing through? Say hello, tell me what you're working on, or just sign your name. No account needed.</p>
+      </div>
+      <div class="guestbook-box reveal">
+        <form class="gb-form" id="gb-form" hidden>
+          <input class="gb-input" id="gb-name" name="name" type="text" maxlength="60" required
+                 placeholder="Your name" autocomplete="name">
+          <textarea class="gb-input gb-text" id="gb-message" name="message" maxlength="1000" required rows="3"
+                    placeholder="Say hello, or tell me what you're working on…"></textarea>
+          <!-- honeypot: hidden from people, catnip for bots -->
+          <input class="gb-hp" id="gb-website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="gb-actions">
+            <button class="btn btn-primary" type="submit" id="gb-submit">Sign the guestbook</button>
+            <span class="gb-status" id="gb-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="gb-fineprint">Notes are read before they go up, so yours won't appear right away.</p>
+        </form>
+
+        <div class="gb-fallback" id="gb-fallback">
+          <p class="guestbook-note">The wall isn't wired up just yet — notes come straight to my inbox in the meantime.</p>
+          <a class="btn btn-primary" href="mailto:patrickvmederos@gmail.com?subject=Signing%20your%20guestbook">Leave a note</a>
+        </div>
+      </div>
+
+      <div class="gb-entries" id="gb-entries" aria-live="polite"></div>
     </div>
   </section>
 
@@ -426,9 +482,9 @@
           <span>© <span id="year"></span> Patrick Mederos</span>
           <span>San Jose, California</span>
         </div>
-        <div class="easter-egg" aria-hidden="true" title="just hangin'">
-          <span class="sprite sprite-nessie" id="sprite-nessie"></span>
-          <span class="sprite sprite-squirtle" id="sprite-squirtle"></span>
+        <div class="easter-egg">
+          <span class="sprite sprite-squirtle" id="sprite-squirtle" role="img" aria-label="A little pixel Squirtle" tabindex="0"></span>
+          <span class="squirtle-say" aria-hidden="true">Squirtle, squirtle!</span>
         </div>
       </div>
     </div>
@@ -442,13 +498,122 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // scroll progress bar
-  var bar = document.getElementById('progress-bar');
-  function updateBar() {
-    var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-    bar.style.width = Math.min(pct, 100) + '%';
+  // growing vine — the stem unfurls as you scroll, sprouting leaves
+  var vine = document.getElementById('vine');
+  var vineGrow = document.getElementById('vine-grow');
+  var vineBud = document.getElementById('vine-bud');
+  var leaves = Array.prototype.slice.call(document.querySelectorAll('.vine-leaf'));
+  function updateVine() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? Math.min(window.scrollY / max, 1) * 100 : 0;
+    vineGrow.style.height = pct + '%';
+    vineBud.style.top = pct + '%';
+    if (pct > 0.5) vine.classList.add('awake'); else vine.classList.remove('awake');
+    leaves.forEach(function (leaf) {
+      var at = parseFloat(leaf.style.getPropertyValue('--at'));
+      leaf.classList.toggle('in', pct >= at);
+    });
   }
-  window.addEventListener('scroll', updateBar, { passive: true });
+  updateVine();
+  window.addEventListener('scroll', updateVine, { passive: true });
+  window.addEventListener('resize', updateVine, { passive: true });
+
+  // time- and season-aware greeting
+  (function () {
+    var el = document.getElementById('greeting');
+    if (!el) return;
+    var now = new Date(), h = now.getHours(), m = now.getMonth();
+    var slot = h < 5 ? 'night' : h < 12 ? 'dawn' : h < 17 ? 'day' : h < 21 ? 'dusk' : 'night';
+    var hello = { dawn: 'Good morning', day: 'Good afternoon', dusk: 'Good evening', night: 'Up late' }[slot];
+    var season = m < 2 || m === 11 ? 'winter' : m < 5 ? 'spring' : m < 8 ? 'summer' : 'autumn';
+    var note = {
+      winter: 'the meadow is quiet this time of year',
+      spring: 'everything is coming back green',
+      summer: 'the grass is tall right now',
+      autumn: 'the light is going gold early these days'
+    }[season];
+    document.documentElement.setAttribute('data-time', slot);
+    document.documentElement.setAttribute('data-season', season);
+    el.innerHTML = hello + ' — <span class="season">' + note + '</span>.';
+  })();
+
+  // dandelion seeds drifting off the cursor
+  (function () {
+    if (reduced || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var last = 0, lastX = 0, lastY = 0, primed = false;
+    var seedSVG = '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">' +
+      '<g stroke="currentColor" stroke-width="0.7" opacity="0.75">' +
+      '<line x1="6" y1="6" x2="6" y2="11"/>' +
+      '<line x1="6" y1="6" x2="2.5" y2="2.5"/><line x1="6" y1="6" x2="9.5" y2="2.5"/>' +
+      '<line x1="6" y1="6" x2="6" y2="1"/><line x1="6" y1="6" x2="1.5" y2="5"/>' +
+      '<line x1="6" y1="6" x2="10.5" y2="5"/></g>' +
+      '<circle cx="6" cy="11" r="1" fill="currentColor" opacity="0.8"/></svg>';
+    document.addEventListener('mousemove', function (e) {
+      var now = performance.now();
+      if (!primed) { primed = true; lastX = e.clientX; lastY = e.clientY; last = now; return; }
+      var dx = e.clientX - lastX, dy = e.clientY - lastY;
+      var speed = Math.sqrt(dx * dx + dy * dy) / Math.max(now - last, 1);
+      lastX = e.clientX; lastY = e.clientY;
+      // sparse on purpose: needs real movement, then only sometimes
+      if (now - last < 420 || speed < 0.35) { return; }
+      last = now;
+      if (Math.random() > 0.45) return;
+      var seed = document.createElement('span');
+      seed.className = 'seed';
+      seed.innerHTML = seedSVG;
+      seed.style.left = (e.clientX - 6) + 'px';
+      seed.style.top = (e.clientY - 6) + 'px';
+      seed.style.color = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#6B7A70';
+      seed.style.setProperty('--dx', (Math.random() * 70 - 20).toFixed(0) + 'px');
+      seed.style.setProperty('--dy', (60 + Math.random() * 70).toFixed(0) + 'px');
+      seed.style.setProperty('--spin', (Math.random() * 220 - 110).toFixed(0) + 'deg');
+      seed.style.setProperty('--dur', (2200 + Math.random() * 1200).toFixed(0) + 'ms');
+      document.body.appendChild(seed);
+      seed.addEventListener('animationend', function () { seed.remove(); });
+    }, { passive: true });
+  })();
+
+  // dusk easter egg — the meadow after dark, with fireflies
+  (function () {
+    var btn = document.getElementById('dusk-toggle');
+    var field = document.getElementById('fireflies');
+    if (!btn || !field) return;
+    for (var i = 0; i < 14; i++) {
+      var f = document.createElement('span');
+      f.className = 'firefly';
+      f.style.setProperty('--fx', (Math.random() * 96 + 2).toFixed(1) + '%');
+      f.style.setProperty('--fy', (Math.random() * 88 + 6).toFixed(1) + '%');
+      f.style.setProperty('--fdx', (Math.random() * 44 - 22).toFixed(0) + 'px');
+      f.style.setProperty('--fdy', (-14 - Math.random() * 30).toFixed(0) + 'px');
+      f.style.setProperty('--fdur', (5 + Math.random() * 6).toFixed(1) + 's');
+      f.style.setProperty('--fdelay', (Math.random() * 7).toFixed(1) + 's');
+      field.appendChild(f);
+    }
+    function setDusk(on) {
+      if (on) document.documentElement.setAttribute('data-theme', 'dusk');
+      else document.documentElement.removeAttribute('data-theme');
+      btn.textContent = on ? '☀' : '🌙';
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var label = on ? 'Turn off dusk' : 'Turn on dusk';
+      btn.setAttribute('title', label);
+      btn.setAttribute('aria-label', label);
+      try { localStorage.setItem('pm-dusk', on ? '1' : '0'); } catch (err) {}
+    }
+    var saved = '0';
+    try { saved = localStorage.getItem('pm-dusk') || '0'; } catch (err) {}
+    if (saved === '1') setDusk(true);
+    btn.addEventListener('click', function () {
+      setDusk(document.documentElement.getAttribute('data-theme') !== 'dusk');
+    });
+    // clicking the meadow works too, for anyone who pokes at it
+    var hills = document.querySelector('.hills');
+    if (hills) {
+      hills.style.cursor = 'pointer';
+      hills.addEventListener('click', function () {
+        setDusk(document.documentElement.getAttribute('data-theme') !== 'dusk');
+      });
+    }
+  })();
 
   // header hairline on scroll
   var header = document.getElementById('header');
@@ -519,7 +684,127 @@
     els.forEach(function (el) { el.classList.add('in'); });
   }
 
-  // Easter egg: pixel buddies — Nessie (Apex) × Squirtle
+  // Guestbook — backed by a Google Sheet via Apps Script.
+  // Paste your Web App /exec URL between the quotes (see SETUP-GUESTBOOK.md).
+  (function () {
+    var GUESTBOOK_URL = 'https://script.google.com/macros/s/AKfycbyG9ZEEeOXz_roRE0SdjjJlp3-QweSAnJ3giwAvDpqWr2UBWWiChoR_gCSauVBO7hCC/exec';
+
+    var form = document.getElementById('gb-form');
+    var fallback = document.getElementById('gb-fallback');
+    var entries = document.getElementById('gb-entries');
+    var statusEl = document.getElementById('gb-status');
+    var submitBtn = document.getElementById('gb-submit');
+    if (!form || !entries) return;
+
+    // Not configured yet — leave the email fallback showing.
+    if (!GUESTBOOK_URL) return;
+
+    form.hidden = false;
+    if (fallback) fallback.hidden = true;
+
+    function say(msg, kind) {
+      statusEl.textContent = msg || '';
+      statusEl.className = 'gb-status' + (kind ? ' is-' + kind : '');
+    }
+
+    function when(iso) {
+      var d = new Date(iso);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function render(list) {
+      entries.textContent = '';
+      if (!list.length) {
+        var none = document.createElement('p');
+        none.className = 'gb-empty';
+        none.textContent = 'No notes yet — be the first to sign it.';
+        entries.appendChild(none);
+        return;
+      }
+      list.forEach(function (item) {
+        var card = document.createElement('div');
+        card.className = 'gb-note';
+
+        var msg = document.createElement('p');
+        msg.className = 'gb-note-msg';
+        msg.textContent = item.message;      // textContent, never innerHTML
+
+        var meta = document.createElement('div');
+        meta.className = 'gb-note-meta';
+        var who = document.createElement('span');
+        who.className = 'gb-note-name';
+        who.textContent = item.name;
+        meta.appendChild(who);
+        var date = when(item.date);
+        if (date) {
+          var sep = document.createElement('span');
+          sep.textContent = ' · ' + date;
+          meta.appendChild(sep);
+        }
+
+        card.appendChild(msg);
+        card.appendChild(meta);
+        entries.appendChild(card);
+      });
+    }
+
+    function load() {
+      fetch(GUESTBOOK_URL, { method: 'GET' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) render(data.entries || []);
+          else throw new Error('bad response');
+        })
+        .catch(function () {
+          entries.innerHTML = '';
+          var err = document.createElement('p');
+          err.className = 'gb-empty';
+          err.textContent = "Couldn't load the notes right now.";
+          entries.appendChild(err);
+        });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('gb-name').value.trim();
+      var message = document.getElementById('gb-message').value.trim();
+      if (!name || !message) { say('Please add your name and a note.', 'err'); return; }
+
+      submitBtn.disabled = true;
+      say('Sending…');
+
+      // text/plain keeps this a "simple" request, so the browser skips the
+      // CORS preflight that Apps Script can't answer.
+      fetch(GUESTBOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          name: name,
+          message: message,
+          website: document.getElementById('gb-website').value
+        })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) {
+            form.reset();
+            say('Thank you — your note is with Patrick.', 'ok');
+            if (data.autoApproved) load();
+          } else {
+            say((data && data.error) || 'Something went wrong. Try again?', 'err');
+          }
+        })
+        .catch(function () {
+          say('Something went wrong. Try again?', 'err');
+        })
+        .then(function () { submitBtn.disabled = false; });
+    });
+
+    load();
+  })();
+
+  // Easter egg: a cuter pixel Squirtle
   (function () {
     function spriteSVG(grid, pal, px) {
       var h = grid.length, w = 0, x, y, f, rects = '';
@@ -534,50 +819,36 @@
              '" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">' + rects + '</svg>';
     }
 
-    var squirtlePal = { O:'#173a52', b:'#83c9ec', w:'#ffffff', k:'#16242e', S:'#9a5a1c', c:'#f6dca8', p:'#f29bb0' };
+    // O outline · b body · w eye white · k pupil · p blush
+    // S shell rim · c belly · m mouth
+    var pal = {
+      O:'#14384f', b:'#8fd4f2', w:'#ffffff', k:'#152430',
+      p:'#f9a0b6', S:'#c8781f', c:'#fce6bc', m:'#7a3245'
+    };
     var squirtle = [
-      ".....OOOOOO.....",
-      "...OObbbbbbOO...",
-      "..ObbbbbbbbbbO..",
-      ".ObbbbbbbbbbbbO.",
-      ".ObwwbbbbbbwwbO.",
-      ".ObwkbbbbbbkwbO.",
-      ".ObbbbbbbbbbbbO.",
-      ".ObbppbbbbppbbO.",
-      "..ObbbbbbbbbbO..",
-      "...OSSSSSSSSO...",
-      "..OSccccccccSO..",
-      ".bOSccccccccSOb.",
-      "..OSccccccccSO..",
-      "...OSSSSSSSSO...",
-      "...Obb....bbO...",
-      "....OO....OO...."
+      ".......OOOOOO.......",
+      ".....OObbbbbbOO.....",
+      "....ObbbbbbbbbbO....",
+      "...ObbbbbbbbbbbbO...",
+      "..ObbbbbbbbbbbbbbO..",
+      "..ObbbbbbbbbbbbbbO..",
+      ".ObbwwwbbbbbbwwwbbO.",
+      ".ObbwkkbbbbbbwkkbbO.",
+      ".ObbkkkbbbbbbkkkbbO.",
+      ".ObbppbbbmmbbbppbbO.",
+      "..ObbbbbbbbbbbbbbO..",
+      "...ObbbbbbbbbbbbO...",
+      "...OSSSSSSSSSSSSO...",
+      "...OSccccccccccSO...",
+      ".ObOSccccccccccSObO.",
+      ".ObOSccccccccccSObO.",
+      "...OSSSSSSSSSSSSO...",
+      ".....ObbO..ObbO.....",
+      ".....OOOO..OOOO....."
     ];
 
-    var nessiePal = { O:'#0e4d49', t:'#34c7be', e:'#a9efe7', k:'#16242e' };
-    var nessie = [
-      "......OOO.......",
-      ".....OtttO......",
-      ".....OtttO......",
-      ".....OktkO......",
-      ".....OtttO......",
-      "......OtO.......",
-      "......OtO.......",
-      "......OtO.......",
-      ".....OtttO......",
-      "...OOtttttOO....",
-      "..OttttttttO....",
-      ".OtteeeeeettO...",
-      ".OteeeeeeeetO...",
-      ".OtteeeeeettO...",
-      "..OttttttttO....",
-      "....OO..OO......"
-    ];
-
-    var n = document.getElementById('sprite-nessie');
     var s = document.getElementById('sprite-squirtle');
-    if (n) n.innerHTML = spriteSVG(nessie, nessiePal, 4);
-    if (s) s.innerHTML = spriteSVG(squirtle, squirtlePal, 4);
+    if (s) s.innerHTML = spriteSVG(squirtle, pal, 5);
   })();
 </script>
 </body>
