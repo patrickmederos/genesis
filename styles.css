@@ -45,24 +45,56 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ---------- Scroll-driven sky: dawn → golden hour → dusk ----------
+   Registered so the colours can actually interpolate. Without
+   animation-timeline support these keep their initial values and the
+   page simply shows the static dawn gradient. */
+@property --sky-now    { syntax: '<color>'; inherits: true; initial-value: #E3F0E9; }
+@property --sky-fade   { syntax: '<color>'; inherits: true; initial-value: rgba(227,240,233,0); }
+@property --aurora-now { syntax: '<color>'; inherits: true; initial-value: rgba(101,168,133,0.20); }
+@property --aurora-alt { syntax: '<color>'; inherits: true; initial-value: rgba(114,164,199,0.16); }
+
 /* dawn gradient — sky fading into warm paper */
 body::before {
   content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: linear-gradient(180deg, var(--sky) 0%, rgba(227,240,233,0) 55%);
+  background: linear-gradient(180deg, var(--sky-now) 0%, var(--sky-fade) 55%);
 }
 /* aurora — soft drifting light, like sun through leaves */
 body::after {
   content: ""; position: fixed; inset: -20%; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(38% 30% at 22% 18%, var(--aurora-a), transparent 70%),
-    radial-gradient(34% 28% at 78% 12%, var(--aurora-b), transparent 70%),
-    radial-gradient(30% 26% at 55% 40%, var(--aurora-a), transparent 72%);
+    radial-gradient(38% 30% at 22% 18%, var(--aurora-now), transparent 70%),
+    radial-gradient(34% 28% at 78% 12%, var(--aurora-alt), transparent 70%),
+    radial-gradient(30% 26% at 55% 40%, var(--aurora-now), transparent 72%);
   animation: aurora 26s ease-in-out infinite alternate;
   will-change: transform;
 }
 @keyframes aurora {
   from { transform: translate3d(-2%, -1%, 0) scale(1); }
   to   { transform: translate3d(2%, 2.5%, 0) scale(1.06); }
+}
+
+/* morning at the top of the page, nightfall by the footer */
+@keyframes daycycle {
+  0%   { --sky-now: #E3F0E9; --sky-fade: rgba(227,240,233,0); --aurora-now: rgba(101,168,133,0.20); --aurora-alt: rgba(114,164,199,0.16); }
+  45%  { --sky-now: #FBEAD1; --sky-fade: rgba(251,234,209,0); --aurora-now: rgba(228,176,104,0.20); --aurora-alt: rgba(226,146,96,0.15); }
+  75%  { --sky-now: #EBDCEE; --sky-fade: rgba(235,220,238,0); --aurora-now: rgba(190,140,190,0.19); --aurora-alt: rgba(150,130,205,0.17); }
+  100% { --sky-now: #CBD2EE; --sky-fade: rgba(203,210,238,0); --aurora-now: rgba(120,126,200,0.20); --aurora-alt: rgba(92,110,180,0.18); }
+}
+@keyframes daycycleDark {
+  0%   { --sky-now: #17241E; --sky-fade: rgba(23,36,30,0);  --aurora-now: rgba(95,191,142,0.10); --aurora-alt: rgba(95,168,211,0.08); }
+  45%  { --sky-now: #26221C; --sky-fade: rgba(38,34,28,0);  --aurora-now: rgba(198,148,84,0.11);  --aurora-alt: rgba(176,116,76,0.09); }
+  75%  { --sky-now: #221C2E; --sky-fade: rgba(34,28,46,0);  --aurora-now: rgba(150,110,180,0.11); --aurora-alt: rgba(120,104,180,0.09); }
+  100% { --sky-now: #15182A; --sky-fade: rgba(21,24,42,0);  --aurora-now: rgba(96,106,180,0.12);  --aurora-alt: rgba(74,90,160,0.10); }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    body { animation: daycycle linear both; animation-timeline: scroll(root block); }
+    @media (prefers-color-scheme: dark) {
+      body { animation-name: daycycleDark; }
+    }
+  }
 }
 
 .wrap { position: relative; z-index: 1; }
@@ -84,8 +116,31 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); font-weight: 6
   border-radius: 0 50% 0 50%; transform: rotate(45deg); display: inline-block;
 }
 
-/* ---------- Progress bar ---------- */
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--cta)); z-index: 200; pointer-events: none; transition: width .08s linear; }
+/* ---------- Growing vine (scroll indicator) ---------- */
+.vine {
+  position: fixed; top: 0; left: 14px; width: 40px; height: 100vh;
+  z-index: 15; pointer-events: none;
+}
+/* the clip that reveals the stem as you scroll */
+.vine-grow { position: absolute; inset: 0; height: 0%; overflow: hidden; transition: height .12s linear; }
+.vine-stem { width: 40px; height: 100vh; display: block; }
+.vine-stem path { stroke: var(--accent); stroke-width: 2; fill: none; opacity: 0.55; vector-effect: non-scaling-stroke; }
+.vine-leaf {
+  position: absolute; top: var(--at); left: var(--x, 19px);
+  width: 11px; height: 11px; background: var(--accent); opacity: 0;
+  border-radius: 0 50% 0 50%;
+  transform: rotate(var(--rot, 45deg)) scale(0.2);
+  transition: opacity .45s ease, transform .5s cubic-bezier(0.22,1.5,0.36,1);
+}
+.vine-leaf.in { opacity: 0.75; transform: rotate(var(--rot, 45deg)) scale(1); }
+/* the bud that rides the tip of the stem */
+.vine-bud {
+  position: absolute; top: 0; left: 15px; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 4px var(--accent-tint);
+  transform: translateY(-50%); transition: top .12s linear; opacity: 0;
+}
+.vine.awake .vine-bud { opacity: 1; }
+@media (max-width: 1180px) { .vine { display: none; } }
 
 /* ---------- Header ---------- */
 header {
@@ -127,7 +182,7 @@ header.scrolled { border-bottom-color: var(--line); }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,255,255,0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 1rem; box-shadow: 0 8px 32px rgba(30,42,36,0.07); }
 .stat { padding: 2rem 1.6rem; position: relative; }
 .stat:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 22%; height: 56%; width: 1px; background: var(--line); }
-.stat .num { font-family: var(--font-display); color: var(--ink); font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1; letter-spacing: -0.01em; font-weight: 600; }
+.stat .num { font-family: var(--font-display); color: var(--ink); font-size: clamp(1.7rem, 3.6vw, 2.5rem); line-height: 1; letter-spacing: -0.01em; font-weight: 600; white-space: nowrap; }
 .stat .num span { color: var(--accent); }
 .stat .num .n { color: var(--ink); display: inline-block; min-width: 1ch; }
 .stat .lbl { font-size: 0.82rem; color: var(--muted); margin-top: 0.55rem; line-height: 1.4; }
@@ -246,8 +301,8 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 
 /* ---------- Guestbook ---------- */
 .guestbook-intro { color: var(--muted); max-width: 46ch; margin: 1rem auto 0; font-size: 0.96rem; }
-.guestbook-box { background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: clamp(1.2rem, 3vw, 2rem); text-align: left; }
-#cusdis_thread { color: var(--ink-soft); }
+.guestbook-box { background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: clamp(1.4rem, 3vw, 2.2rem); text-align: center; }
+.guestbook-note { color: var(--ink-soft); max-width: 52ch; margin: 0 auto 1.4rem; font-size: 0.96rem; }
 
 /* ---------- Easter egg: Squirtle ---------- */
 .easter-egg { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 2.6rem; min-height: 120px; }
@@ -279,14 +334,99 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
   50%      { transform: translateY(-4px) rotate(-2deg); }
 }
 
+/* ---------- Time-aware greeting ---------- */
+.greeting { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.2rem; }
+.greeting .season { color: var(--accent-deep); font-weight: 600; }
+
+/* ---------- Dandelion seeds on the cursor ---------- */
+.seed {
+  position: fixed; z-index: 9; pointer-events: none; width: 12px; height: 12px;
+  opacity: 0; animation: seedDrift var(--dur, 2600ms) ease-out forwards;
+  will-change: transform, opacity;
+}
+.seed svg { display: block; width: 100%; height: 100%; }
+@keyframes seedDrift {
+  0%   { opacity: 0;   transform: translate(0,0) rotate(0deg) scale(0.7); }
+  14%  { opacity: 0.85; }
+  100% { opacity: 0;   transform: translate(var(--dx), var(--dy)) rotate(var(--spin)) scale(1); }
+}
+
+/* ---------- Dusk toggle (moon / sun) ---------- */
+.dusk-toggle {
+  width: 32px; height: 32px; flex: none; display: grid; place-items: center;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.5); color: var(--muted);
+  border-radius: 50%; cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
+  transition: color .25s ease, border-color .25s ease, transform .25s ease, background .25s ease;
+}
+.dusk-toggle:hover { color: var(--accent-deep); border-color: var(--accent); transform: rotate(-18deg) scale(1.08); }
+.dusk-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+
+/* ---------- Dusk mode: the meadow after dark ---------- */
+html[data-theme="dusk"] {
+  --paper:      #10141F;
+  --sky:        #1A2036;
+  --surface:    #171C2C;
+  --ink:        #EAEEF8;
+  --ink-soft:   #BFC7DA;
+  --muted:      #808AA3;
+  --line:       #262D42;
+  --line-soft:  #1F2537;
+  --accent:     #7FD4A8;
+  --accent-deep:#A7E6C6;
+  --accent-tint:rgba(127,212,168,0.16);
+  --cta:        #7FB2E0;
+  --cta-hover:  #9AC6EC;
+  --hill-back:  #1B2236;
+  --hill-front: #171C2C;
+  --sky-now:    #1A2036;
+  --sky-fade:   rgba(26,32,54,0);
+  --aurora-now: rgba(127,212,168,0.10);
+  --aurora-alt: rgba(127,178,224,0.09);
+}
+/* in dusk the sky is fixed at night — stop the scroll cycle */
+html[data-theme="dusk"] body { animation: none !important; }
+html[data-theme="dusk"] header { background: rgba(16,20,31,0.8); }
+html[data-theme="dusk"] .btn-primary,
+html[data-theme="dusk"] .btn-primary:hover { color: #0D1A14; }
+html[data-theme="dusk"] .btn-ghost,
+html[data-theme="dusk"] .chip,
+html[data-theme="dusk"] .stats,
+html[data-theme="dusk"] .quote-card,
+html[data-theme="dusk"] .inspo-card,
+html[data-theme="dusk"] .guestbook-box,
+html[data-theme="dusk"] .foot-links a,
+html[data-theme="dusk"] .dusk-toggle { background: rgba(255,255,255,0.05); }
+html[data-theme="dusk"] .foot-links a:hover { color: #0D1A14; }
+html[data-theme="dusk"] .book img { box-shadow: 0 10px 24px rgba(0,0,0,0.5); }
+
+/* ---------- Fireflies (dusk only) ---------- */
+.fireflies { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+html[data-theme="dusk"] .fireflies { opacity: 1; }
+.firefly {
+  position: absolute; top: var(--fy); left: var(--fx); width: 4px; height: 4px; border-radius: 50%;
+  background: #FFE9A3; box-shadow: 0 0 7px 2px rgba(255,224,130,0.7);
+  opacity: 0; animation: flicker var(--fdur, 7s) ease-in-out var(--fdelay, 0s) infinite;
+}
+@keyframes flicker {
+  0%, 100%   { opacity: 0;    transform: translate(0,0); }
+  20%        { opacity: 0.85; }
+  50%        { opacity: 0.25; transform: translate(var(--fdx, 14px), var(--fdy, -18px)); }
+  80%        { opacity: 0.7; }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
+  .vine-grow, .vine-bud { transition: none; }
+  .vine-leaf { transition: opacity .3s ease; transform: rotate(var(--rot, 45deg)) scale(1); }
+  .seed { display: none; }
+  .firefly { animation: none; opacity: 0.55; }
+  .dusk-toggle:hover { transform: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero-enter { animation: none; }
   .stat.spinning .num .n, .stat.landed .num { animation: none; filter: none; }
   .quote-card:hover, .inspo-card:hover, .book:hover img { transform: none; }
   .easter-egg:hover .sprite-squirtle { transform: none; }
-  #progress-bar { transition: none; }
   body::after { animation: none; }
   .sprite-squirtle { animation: none; }
   html { scroll-behavior: auto; }
