@@ -304,6 +304,33 @@ footer .sub { color: var(--muted); margin: 1rem auto 0; max-width: 46ch; }
 .guestbook-box { background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: clamp(1.4rem, 3vw, 2.2rem); text-align: center; }
 .guestbook-note { color: var(--ink-soft); max-width: 52ch; margin: 0 auto 1.4rem; font-size: 0.96rem; }
 
+/* form */
+.gb-form { display: flex; flex-direction: column; gap: 0.7rem; text-align: left; }
+.gb-input {
+  font-family: var(--font-body); font-size: 0.95rem; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+  padding: 0.7rem 0.9rem; width: 100%; transition: border-color .2s ease, box-shadow .2s ease;
+}
+.gb-input::placeholder { color: var(--muted); }
+.gb-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+.gb-text { resize: vertical; min-height: 88px; line-height: 1.6; }
+.gb-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.gb-actions { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.2rem; }
+.gb-status { font-size: 0.86rem; color: var(--muted); }
+.gb-status.is-ok { color: var(--accent-deep); font-weight: 600; }
+.gb-status.is-err { color: #B4452F; font-weight: 600; }
+.gb-fineprint { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+.gb-form button[disabled] { opacity: 0.6; cursor: default; }
+
+/* the wall of notes */
+.gb-entries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.4rem; text-align: left; }
+@media (max-width: 720px) { .gb-entries { grid-template-columns: 1fr; } }
+.gb-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.9rem; padding: 0.6rem 0; }
+.gb-note { background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 1.1rem 1.2rem; }
+.gb-note-msg { font-size: 0.95rem; line-height: 1.6; color: var(--ink-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
+.gb-note-meta { font-size: 0.8rem; color: var(--muted); margin-top: 0.7rem; }
+.gb-note-name { font-weight: 600; color: var(--ink); }
+
 /* ---------- Easter egg: Squirtle ---------- */
 .easter-egg { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 2.6rem; min-height: 120px; }
 .sprite { display: inline-block; line-height: 0; filter: drop-shadow(0 5px 7px rgba(0,0,0,0.2)); cursor: pointer; border-radius: 10px; }
@@ -394,6 +421,7 @@ html[data-theme="dusk"] .chip,
 html[data-theme="dusk"] .stats,
 html[data-theme="dusk"] .quote-card,
 html[data-theme="dusk"] .inspo-card,
+html[data-theme="dusk"] .gb-note,
 html[data-theme="dusk"] .guestbook-box,
 html[data-theme="dusk"] .foot-links a,
 html[data-theme="dusk"] .dusk-toggle { background: rgba(255,255,255,0.05); }
@@ -465,6 +493,9 @@ html[data-theme="dusk"] .fireflies { opacity: 1; }
   .book img { box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
   .book:hover img { box-shadow: 0 18px 36px rgba(0,0,0,0.55); }
   .guestbook-box { background: rgba(255,255,255,0.04); }
+  .gb-note { background: rgba(255,255,255,0.04); }
+  .gb-input { background: rgba(255,255,255,0.05); }
+  .gb-status.is-err { color: #F09A86; }
   .squirtle-say { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
   .chip { background: rgba(255,255,255,0.05); }
   .foot-links a { background: rgba(255,255,255,0.05); }

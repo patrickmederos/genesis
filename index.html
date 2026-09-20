@@ -437,9 +437,27 @@
         <p class="guestbook-intro">Passing through? Say hello, tell me what you're working on, or just sign your name. No account needed.</p>
       </div>
       <div class="guestbook-box reveal">
-        <p class="guestbook-note">The public wall is being rebuilt on a sturdier foundation. In the meantime, notes come straight to my inbox — and the good ones will be the first to go up.</p>
-        <a class="btn btn-primary" href="mailto:patrickvmederos@gmail.com?subject=Signing%20your%20guestbook">Leave a note</a>
+        <form class="gb-form" id="gb-form" hidden>
+          <input class="gb-input" id="gb-name" name="name" type="text" maxlength="60" required
+                 placeholder="Your name" autocomplete="name">
+          <textarea class="gb-input gb-text" id="gb-message" name="message" maxlength="1000" required rows="3"
+                    placeholder="Say hello, or tell me what you're working on…"></textarea>
+          <!-- honeypot: hidden from people, catnip for bots -->
+          <input class="gb-hp" id="gb-website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="gb-actions">
+            <button class="btn btn-primary" type="submit" id="gb-submit">Sign the guestbook</button>
+            <span class="gb-status" id="gb-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="gb-fineprint">Notes are read before they go up, so yours won't appear right away.</p>
+        </form>
+
+        <div class="gb-fallback" id="gb-fallback">
+          <p class="guestbook-note">The wall isn't wired up just yet — notes come straight to my inbox in the meantime.</p>
+          <a class="btn btn-primary" href="mailto:patrickvmederos@gmail.com?subject=Signing%20your%20guestbook">Leave a note</a>
+        </div>
       </div>
+
+      <div class="gb-entries" id="gb-entries" aria-live="polite"></div>
     </div>
   </section>
 
@@ -665,6 +683,126 @@
   } else {
     els.forEach(function (el) { el.classList.add('in'); });
   }
+
+  // Guestbook — backed by a Google Sheet via Apps Script.
+  // Paste your Web App /exec URL between the quotes (see SETUP-GUESTBOOK.md).
+  (function () {
+    var GUESTBOOK_URL = '';
+
+    var form = document.getElementById('gb-form');
+    var fallback = document.getElementById('gb-fallback');
+    var entries = document.getElementById('gb-entries');
+    var statusEl = document.getElementById('gb-status');
+    var submitBtn = document.getElementById('gb-submit');
+    if (!form || !entries) return;
+
+    // Not configured yet — leave the email fallback showing.
+    if (!GUESTBOOK_URL) return;
+
+    form.hidden = false;
+    if (fallback) fallback.hidden = true;
+
+    function say(msg, kind) {
+      statusEl.textContent = msg || '';
+      statusEl.className = 'gb-status' + (kind ? ' is-' + kind : '');
+    }
+
+    function when(iso) {
+      var d = new Date(iso);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function render(list) {
+      entries.textContent = '';
+      if (!list.length) {
+        var none = document.createElement('p');
+        none.className = 'gb-empty';
+        none.textContent = 'No notes yet — be the first to sign it.';
+        entries.appendChild(none);
+        return;
+      }
+      list.forEach(function (item) {
+        var card = document.createElement('div');
+        card.className = 'gb-note';
+
+        var msg = document.createElement('p');
+        msg.className = 'gb-note-msg';
+        msg.textContent = item.message;      // textContent, never innerHTML
+
+        var meta = document.createElement('div');
+        meta.className = 'gb-note-meta';
+        var who = document.createElement('span');
+        who.className = 'gb-note-name';
+        who.textContent = item.name;
+        meta.appendChild(who);
+        var date = when(item.date);
+        if (date) {
+          var sep = document.createElement('span');
+          sep.textContent = ' · ' + date;
+          meta.appendChild(sep);
+        }
+
+        card.appendChild(msg);
+        card.appendChild(meta);
+        entries.appendChild(card);
+      });
+    }
+
+    function load() {
+      fetch(GUESTBOOK_URL, { method: 'GET' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) render(data.entries || []);
+          else throw new Error('bad response');
+        })
+        .catch(function () {
+          entries.innerHTML = '';
+          var err = document.createElement('p');
+          err.className = 'gb-empty';
+          err.textContent = "Couldn't load the notes right now.";
+          entries.appendChild(err);
+        });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('gb-name').value.trim();
+      var message = document.getElementById('gb-message').value.trim();
+      if (!name || !message) { say('Please add your name and a note.', 'err'); return; }
+
+      submitBtn.disabled = true;
+      say('Sending…');
+
+      // text/plain keeps this a "simple" request, so the browser skips the
+      // CORS preflight that Apps Script can't answer.
+      fetch(GUESTBOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          name: name,
+          message: message,
+          website: document.getElementById('gb-website').value
+        })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) {
+            form.reset();
+            say('Thank you — your note is with Patrick.', 'ok');
+            if (data.autoApproved) load();
+          } else {
+            say((data && data.error) || 'Something went wrong. Try again?', 'err');
+          }
+        })
+        .catch(function () {
+          say('Something went wrong. Try again?', 'err');
+        })
+        .then(function () { submitBtn.disabled = false; });
+    });
+
+    load();
+  })();
 
   // Easter egg: a cuter pixel Squirtle
   (function () {
