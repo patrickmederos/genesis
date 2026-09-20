@@ -118,12 +118,12 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); font-weight: 6
 
 /* ---------- Growing vine (scroll indicator) ---------- */
 .vine {
-  position: fixed; top: 0; left: 14px; width: 40px; height: 100vh;
+  position: fixed; top: 64px; left: 14px; width: 40px; height: calc(100vh - 64px);
   z-index: 15; pointer-events: none;
 }
 /* the clip that reveals the stem as you scroll */
 .vine-grow { position: absolute; inset: 0; height: 0%; overflow: hidden; transition: height .12s linear; }
-.vine-stem { width: 40px; height: 100vh; display: block; }
+.vine-stem { width: 40px; height: calc(100vh - 64px); display: block; }
 .vine-stem path { stroke: var(--accent); stroke-width: 2; fill: none; opacity: 0.55; vector-effect: non-scaling-stroke; }
 .vine-leaf {
   position: absolute; top: var(--at); left: var(--x, 19px);
@@ -140,7 +140,9 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); font-weight: 6
   transform: translateY(-50%); transition: top .12s linear; opacity: 0;
 }
 .vine.awake .vine-bud { opacity: 1; }
-@media (max-width: 1180px) { .vine { display: none; } }
+/* half-screen windows: hug the edge so the stem clears the text column */
+@media (max-width: 1180px) { .vine { left: 2px; } }
+@media (max-width: 900px) { .vine { display: none; } }
 
 /* ---------- Header ---------- */
 header {
