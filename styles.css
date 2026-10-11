@@ -207,6 +207,12 @@ section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .wave-divider svg { width: 100%; height: 34px; display: block; }
 
 .prose { max-width: 64ch; margin: 0 auto; text-align: center; }
+/* small on purpose — it's a low-res source */
+.portrait {
+  width: 104px; height: 104px; border-radius: 50%; object-fit: cover; object-position: 50% 30%;
+  display: block; margin: 0 auto 1.7rem;
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--line), 0 10px 26px rgba(30,42,36,0.16);
+}
 .prose p { margin-bottom: 1.1rem; }
 .prose p:last-child { margin-bottom: 0; }
 .prose strong { color: var(--accent-deep); font-weight: 600; }
@@ -229,6 +235,15 @@ section.block { padding: clamp(3.5rem, 8vw, 6rem) 0; }
 .role-item li { position: relative; padding-left: 1.1rem; font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6; }
 .role-item li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
 .role-item .first { display: inline-block; background: var(--accent-tint); color: var(--accent-deep); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.15rem 0.55rem; border-radius: 6px; margin-left: 0.5rem; vertical-align: middle; }
+/* the newest badge catches the light now and then */
+.role-item .first.is-new { position: relative; overflow: hidden; }
+.role-item .first.is-new::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.8) 50%, transparent 62%);
+  transform: translateX(-130%);
+  animation: badgeShine 5s ease-in-out 1.5s infinite;
+}
+@keyframes badgeShine { 0% { transform: translateX(-130%); } 18%, 100% { transform: translateX(130%); } }
 
 /* ---------- Recognition / quotes ---------- */
 .quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; text-align: left; }
@@ -452,6 +467,7 @@ html[data-theme="dusk"] .fireflies { opacity: 1; }
   .seed { display: none; }
   .firefly { animation: none; opacity: 0.55; }
   .dusk-toggle:hover { transform: none; }
+  .role-item .first.is-new::after { animation: none; display: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero-enter { animation: none; }
   .stat.spinning .num .n, .stat.landed .num { animation: none; filter: none; }
